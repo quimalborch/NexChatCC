@@ -12,3 +12,11 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Chats {
+  id Int @id @default(autoincrement())
+  name String
+  url String
+  secret_key String
+  createdAt DateTime @default(now())
+}
