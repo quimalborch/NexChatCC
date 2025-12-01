@@ -9,6 +9,7 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    url: env("PRISMA_DATABASE_URL"),
+    // Use direct PostgreSQL URL for migrations and CLI commands
+    url: env("POSTGRES_URL"),
   },
 });

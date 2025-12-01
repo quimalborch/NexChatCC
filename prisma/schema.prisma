@@ -4,13 +4,15 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
-generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
-}
-
+// Define database connection - URL is now in prisma.config.ts for Prisma 7
 datasource db {
   provider = "postgresql"
+}
+
+// Define custom output path for generated Prisma Client
+generator client {
+  provider = "prisma-client-js"
+  output   = "../prisma/generated/prisma-client"
 }
 
 model Chats {
