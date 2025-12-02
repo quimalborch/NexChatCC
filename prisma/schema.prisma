@@ -5,14 +5,13 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 // Define database connection - URL is now in prisma.config.ts for Prisma 7
-datasource db {
-  provider = "postgresql"
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
 }
 
-// Define custom output path for generated Prisma Client
-generator client {
-  provider = "prisma-client-js"
-  output   = "../prisma/generated/prisma-client"
+datasource db {
+  provider = "postgresql"
 }
 
 model Chats {

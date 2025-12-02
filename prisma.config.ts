@@ -9,7 +9,7 @@ export default defineConfig({
     path: "prisma/migrations",
   },
   datasource: {
-    // Use direct PostgreSQL URL for migrations and CLI commands
-    url: env("POSTGRES_URL"),
+    // Use Accelerate URL if available, otherwise direct PostgreSQL URL
+    url: env("DATABASE_URL"),
   },
 });
