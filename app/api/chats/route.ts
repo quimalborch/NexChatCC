@@ -80,3 +80,84 @@ export async function POST(request: Request) {
     );
   }
 }
+
+export async function DELETE(request: Request) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const secret_key = searchParams.get('secret_key');
+
+    // Validar que la secret_key esté presente
+    if (!secret_key) {
+      return NextResponse.json(
+        { error: 'El parámetro "secret_key" es requerido' },
+        { status: 400 }
+      );
+    }
+
+    const result = await prisma.chats.deleteMany({
+      where: {
+        secret_key: secret_key,
+      },
+    });
+
+    if (result.count === 0) {
+      return NextResponse.json(
+        { error: 'El chat no existe o la secret_key es incorrecta' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { message: 'Chat eliminado correctamente'},
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('Error al eliminar chat:', error);
+    
+    return NextResponse.json(
+      { error: 'Error al eliminar el chat' },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(request: Request) {
+  try {
+    const body = await request.json();
+    const { secret_key, name } = body;
+    // Validar que los campos requeridos estén presentes
+    if (!secret_key || !name) {
+      return NextResponse.json(
+        { error: 'Los campos "secret_key" y "name" son requeridos' },
+        { status: 400 }
+      );
+    }
+
+    const updatedChat = await prisma.chats.updateMany({
+      where: {
+        secret_key: secret_key,
+      },
+      data: {
+        name: name,
+      },
+    });
+
+    if (updatedChat.count === 0) {
+      return NextResponse.json(
+        { error: 'El chat no existe o la secret_key es incorrecta' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(
+      { message: 'Nombre del chat actualizado correctamente' },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('Error al actualizar el nombre del chat:', error);
+    return NextResponse.json(
+      { error: 'Error al actualizar el nombre del chat' },
+      { status: 500 }
+    );
+  }
+}
