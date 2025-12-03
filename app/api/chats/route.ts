@@ -6,8 +6,26 @@ function generateSecretKey(): string {
   return randomBytes(32).toString('hex');
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get('page') || '1');
+    const pageSize = parseInt(searchParams.get('pageSize') || '10');
+
+    // Validar que los parámetros sean válidos
+    if (page < 1 || pageSize < 1) {
+      return NextResponse.json(
+        { error: 'Los parámetros "page" y "pageSize" deben ser mayores a 0' },
+        { status: 400 }
+      );
+    }
+
+    const skip = (page - 1) * pageSize;
+
+    // Obtener el total de chats
+    const total = await prisma.chats.count();
+
+    // Obtener los chats paginados
     const chats = await prisma.chats.findMany({
       select: {
         id: true,
@@ -18,9 +36,23 @@ export async function GET() {
       orderBy: {
         createdAt: "desc",
       },
+      skip: skip,
+      take: pageSize,
     });
 
-    return NextResponse.json(chats, { status: 200 });
+    const totalPages = Math.ceil(total / pageSize);
+
+    return NextResponse.json({
+      data: chats,
+      pagination: {
+        page,
+        pageSize,
+        total,
+        totalPages,
+        hasNextPage: page < totalPages,
+        hasPrevPage: page > 1,
+      }
+    }, { status: 200 });
   } catch (error) {
     console.error('Error al obtener chats:', error);
     return NextResponse.json(
