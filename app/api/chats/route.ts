@@ -77,7 +77,7 @@ export async function POST(request: Request) {
 
     if (process.env.NODE_ENV === 'production') {
       try {
-        const response = await fetch(`${url}/ping`, { method: 'HEAD' });
+        const response = await fetch(`https://${url}.trycloudflare.com/ping`, { method: 'HEAD' });
         if (response.status !== 200) {
           return NextResponse.json(
           { error: 'La URL proporcionada no está activa' },
