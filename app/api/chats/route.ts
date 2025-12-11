@@ -77,8 +77,10 @@ export async function POST(request: Request) {
 
     if (process.env.NODE_ENV === 'production') {
       try {
-        const response = await fetch(`https://${url}.trycloudflare.com/ping`, { method: 'HEAD' });
+        //console.log(`Verificando la URL proporcionada en entorno de desarrollo... https://${url}.trycloudflare.com/ping`);
+        const response = await fetch(`https://${url}.trycloudflare.com/ping`, { method: 'GET' });
         if (response.status !== 200) {
+          //console.log(`La URL proporcionada no está activa: https://${url}.trycloudflare.com/ping`);
           return NextResponse.json(
           { error: 'La URL proporcionada no está activa' },
           { status: 400 }
@@ -91,6 +93,8 @@ export async function POST(request: Request) {
         );
       }
     }
+
+    //console.log('Creando un nuevo chat con los datos proporcionados...');
 
     // Generar la secret_key automáticamente
     const secret_key = generateSecretKey();

@@ -30,8 +30,9 @@ export async function GET(request: NextRequest) {
         for (const chat of chats) {
             results.checked++;
             try {
+                //console.log(`Verificando la URL del chat: https://${chat.url}.trycloudflare.com/ping`);
                 const response = await fetch(`https://${chat.url}.trycloudflare.com/ping`, { 
-                    method: 'HEAD',
+                    method: 'GET',
                     signal: AbortSignal.timeout(5000), 
                 });
                 
