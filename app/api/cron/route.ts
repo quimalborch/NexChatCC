@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
         for (const chat of chats) {
             results.checked++;
             try {
-                const response = await fetch(`${chat.url}/ping`, { 
+                const response = await fetch(`https://${chat.url}.trycloudflare.com/ping`, { 
                     method: 'HEAD',
                     signal: AbortSignal.timeout(5000), 
                 });
